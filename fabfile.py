@@ -1,7 +1,7 @@
 from fabric.api import env,run
 from fabric.operations import sudo
 
-GIT_REPO = 'https://github.com/cycmay/blogByDjango.git'
+GIT_REPO = 'git@github.com:cycmay/blog.git'
 
 env.user = 'root'
 env.password = 'Cyc19971215/'
@@ -11,7 +11,7 @@ env.hosts = ['123.56.218.23']
 env.port = '22'
 
 def deploy():
-    source_folder = '/home/cyc/sites/www.helloc.site/blogByDjango/blogproject'
+    source_folder = '/home/cyc/sites/www.helloc.site/blog'
 
     run('cd %s && git pull % source_folder')
     run("""
