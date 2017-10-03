@@ -1,0 +1,51 @@
+server {
+    charset utf-8;
+    listen 80;
+    server_name 123.56.218.23;
+
+    location /static {
+        alias /home/cyc/sites/www.helloc.site/blog/static;
+    }
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_pass http://unix:/tmp/123.56.218.23.socket;
+    }
+}
+ gunicorn --bind unix:/tmp/123.56.218.23.socket blogproject.wsgi:application
+502 问题多半gunicorn 没开
+自启动问题：
+1. 新建目录(自启动服务文件存放目录)
+sudo mkdir -p /usr/lib/systemd/system
+
+2. 新建文件(自启动的服务文件)
+sudo vim /usr/lib/systemd/system/siar.service
+
+2.1 添加如下内容
+[Unit]
+After=syslog.target network.target remote-fs.target nss-lookup.target
+[Service]
+# 你的用户
+User=siar
+# 你的目录
+WorkingDirectory=/home/siar/sites/django-blog-learning/blogproject
+# gunicorn启动命令
+ExecStart=/home/siar/sites/env/bin/gunicorn --bind unix:/tmp/siar.socket blogproject.wsgi:application
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+有一些参数我也不是太懂，具体可以参照下面的systemd.service 中文手册链接。
+2.2 保存并退出
+:wq
+
+3. 启动服务
+sudo systemctl start siar
+
+我的文件名是siar.service,所以就sudo systemctl start siar
+4. 添加服务到开机自动运行
+sudo systemctl enable siar.service
+
+5. 验证启动
+ps -ef | grep gunicorn
+
+查看gunicorn是否已经启动，有两个进程。

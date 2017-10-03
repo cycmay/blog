@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '&x-yny0dc-v_ck@cys4%zcygl9^_phdm%*2wii&u(vo%k&@9)d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','.helloc.site']
+#ALLOWED_HOSTS = ['127.0.0.1','localhost','.helloc.site']
 
 
 # Application definition

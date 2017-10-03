@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,render_to_response
 from comments.forms import CommentForm
 from django.http import HttpResponse
 from .models import Post,Category
@@ -38,3 +38,10 @@ def category(request,pk):
 	cate = get_object_or_404(Category,pk = pk)
 	post_list = Post.objects.filter(category = cate)
 	return render(request,'blog/index.html', context = {'post_list' : post_list})
+
+def page_not_found(request):
+    return render_to_response('404.html')
+
+
+def page_error(request):
+    return render_to_response('500.html')
