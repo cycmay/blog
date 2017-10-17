@@ -2,6 +2,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils.html import strip_tags
+import markdown
 # Create your models here.
 
 class Category(models.Model):
@@ -53,8 +55,31 @@ class Post(models.Model):
     # 因为我们规定一篇文章只能有一个作者，而一个作者可能会写多篇文章，因此这是一对多的关联关系，和 Category 类似。
 	author = models.ForeignKey(User)
 
+	#记录文章的浏览量
+	#新增views字段
+	views = models.PositiveIntegerField(default = 0)
+
+
 	def get_absolute_url(self):
 		return reverse('blog:detail',kwargs = {'pk' : self.pk})
+	#用户浏览后新增1
+	def increase_views(self):
+		self.views += 1
+		self.save(update_fields = ['views'])
 
+	#复写save方法，是文章摘要生成
+	def save(self, *args, **kwargs):
+		if not self.excerpt:
+			#实例化一个markdown类，用于渲染body文本
+			md = markdown.Markdown(extensions = [
+					'markdown.extensions.extra',
+					'markdown.extensions.codehilite',
+				])
+			#渲染成HTML文本
+			#strip_tabs 去掉HTML文本的全部标签
+			#从文本提取54个字符
+			self.excerpt = strip_tags(md.convert(self.body))[:54]
+		#调用父类的save方法保存至数据库
+		super(Post,self).save(*args, **kwargs)
 	class Meta:
 		ordering = ['-create_time']
