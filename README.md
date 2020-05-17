@@ -2,6 +2,6 @@
 blog by python&amp;Django
 blog
 
-#test_c
+#test_c_fix
 
-#feature_w
+#feature_w_fix
